@@ -1,0 +1,33 @@
+- name: Install required packages
+  package:
+    name:
+      - realmd
+      - sssd
+      - sssd-tools
+      - libnss-sss
+      - libpam-sss
+      - adcli
+      - samba-common-bin
+      - oddjob
+      - oddjob-mkhomedir
+      - packagekit
+  state: present
+
+- name: Discover the domain
+  command: realm discover {{ ad_domain }}
+  register: realm_discover
+  changed_when: false
+
+- name: Join the domain
+  expect:
+    command: realm join -U {{ ad_user }} {{ ad_domain }}
+    responses:
+      Password for *: "{{ ad_password }}"
+  when: "'domain-name: {{ ad_domain }}' in realm_discover.stdout"
+
+- name: Enable mkhomedir 
+  lineinfile:
+    dest: /etc/pam.d/common-session
+    line: "session required pam_mkhomedir.so skel=/etc/skel/ umask=0077"
+    state: present
+  when: ansible_facts['os_family'] == 'Debian'

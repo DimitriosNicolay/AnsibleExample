@@ -1,0 +1,6 @@
+- name: Join Linux client to Active Directory via realmd
+  hosts: domain_clients
+  become: true
+
+  roles:
+    - realm_join
