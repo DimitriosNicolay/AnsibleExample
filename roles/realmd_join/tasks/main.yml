@@ -11,7 +11,7 @@
       - oddjob
       - oddjob-mkhomedir
       - packagekit
-  state: present
+    state: present
 
 - name: Discover the domain
   command: realm discover {{ ad_domain }}
@@ -31,3 +31,9 @@
     line: "session required pam_mkhomedir.so skel=/etc/skel/ umask=0077"
     state: present
   when: ansible_facts['os_family'] == 'Debian'
+
+- name: Add AD group to sudoers
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers.d/linux-admins
+    mode: '0440'
