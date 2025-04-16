@@ -3,4 +3,8 @@
   become: true
 
   roles:
-    - realmd_join
+    - { role: realmd_join, tags: ['realmd_join'] }
+    - { role: docker, tags: ['docker'] }
+    - { role: grafana_stack, tags: ['grafana_stack'] }
+    - { role: promtail_linux, tags: ['promtail_linux'] }
+    - { role: promtail_windows, tags: ['promtail_windows'] }
