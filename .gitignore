@@ -1,2 +1,5 @@
 .vscode
 inventory/inventory.ini
+*.retry
+*.pyc
+.vault-pass

@@ -1,38 +1,53 @@
-Role Name
-=========
+# Active Directory Integration Role
 
-A brief description of the role goes here.
+Integrates Linux systems with Active Directory using realmd.
 
-Requirements
-------------
+## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Ubuntu 20.04/22.04
+- Active Directory domain
+- Network connectivity to AD
 
-Role Variables
---------------
+## Role Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Required variables (define in vault):
+```yaml
+ad_domain: "example.com"      # Active Directory domain
+ad_user: "administrator"      # AD user with join permissions
+ad_password: "secret"         # AD user password
+ad_admin_group: "linux-admins" # AD group for sudo access
+```
 
-Dependencies
-------------
+## Dependencies
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None. Role installs required packages:
+- realmd
+- sssd
+- adcli
+- samba-common-bin
+- oddjob
+- oddjob-mkhomedir
 
-Example Playbook
-----------------
+## Example Playbook
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yaml
+- hosts: linux_clients
+  roles:
+    - { role: realmd_join, tags: ['realmd_join'] }
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+## Role Actions
 
-License
--------
+1. Installs required packages
+2. Discovers AD domain
+3. Joins system to domain
+4. Configures home directory creation
+5. Sets up sudo access for AD group
 
-BSD
+## License
 
-Author Information
-------------------
+MIT
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+## Author Information
+
+Created by Dimitrios Nicolay
